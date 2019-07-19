@@ -124,18 +124,16 @@ Borg >> camera: arg1 [
 	camera := arg1
 ]
 
-{ #category : #API }
-Borg >> execute: arg1 withArguments: arg2 [
-	arg1 = #distance
-		ifTrue: [ ^ self getDistance printString ].
-	arg1 = #power
-		ifTrue: [ biMotors power: arg2.
-			^ 'ok' ].
-	^ self executeMotorCommand: arg1
+{ #category : #'API - commands' }
+Borg >> execute: commandSymbol withArguments: commandArgument [
+	^ (BorgCommandWithArgument
+		command: commandSymbol
+		argument: commandArgument) execute
 ]
 
-{ #category : #API }
+{ #category : #'API - commands' }
 Borg >> executeMotorCommand: arg1 [
+	self deprecated: 'Behavior replaced by commands'.
 	arg1 = #stop
 		ifTrue: [ biMotors stop ].
 	arg1 = #left
@@ -151,8 +149,9 @@ Borg >> executeMotorCommand: arg1 [
 	^ 'OK'
 ]
 
-{ #category : #API }
+{ #category : #'API - commands' }
 Borg >> executeMotorCommand: arg1 withArgument: arg2 [
+	self deprecated: 'Behavior replaced by commands'.
 	arg1 = #stop
 		ifTrue: [ biMotors stop ].
 	arg1 = #left
