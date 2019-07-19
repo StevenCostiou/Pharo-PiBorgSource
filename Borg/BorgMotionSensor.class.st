@@ -5,7 +5,7 @@ Class {
 		'addressLeft',
 		'addressRight'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #'as yet unclassified' }

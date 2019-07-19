@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'httpDriver'
 	],
-	#category : #Borg
+	#category : #'Borg-Motors'
 }
 
 { #category : #initialization }

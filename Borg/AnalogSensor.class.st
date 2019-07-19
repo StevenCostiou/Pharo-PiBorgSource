@@ -5,7 +5,7 @@ Class {
 		'address',
 		'device'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #'as yet unclassified' }

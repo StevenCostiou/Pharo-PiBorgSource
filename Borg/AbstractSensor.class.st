@@ -1,5 +1,5 @@
 Class {
 	#name : #AbstractSensor,
 	#superclass : #Object,
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }

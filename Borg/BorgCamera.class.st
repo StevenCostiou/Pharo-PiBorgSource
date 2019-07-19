@@ -6,7 +6,7 @@ Class {
 		'imagePath',
 		'imageName'
 	],
-	#category : #Borg
+	#category : #'Borg-Camera'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #BorgCameraMock,
 	#superclass : #AbstractSensor,
-	#category : #Borg
+	#category : #'Borg-Camera'
 }
 
 { #category : #private }

@@ -5,7 +5,7 @@ Class {
 		'power',
 		'position'
 	],
-	#category : #Borg
+	#category : #'Borg-Motors'
 }
 
 { #category : #accessing }

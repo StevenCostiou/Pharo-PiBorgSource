@@ -7,7 +7,7 @@ Class {
 	#classInstVars : [
 		'logs'
 	],
-	#category : #Borg
+	#category : #'Borg-Model'
 }
 
 { #category : #accessing }

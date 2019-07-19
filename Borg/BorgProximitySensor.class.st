@@ -1,7 +1,7 @@
 Class {
 	#name : #BorgProximitySensor,
 	#superclass : #AnalogSensor,
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #api }

@@ -6,7 +6,7 @@ Class {
 		'commandServer',
 		'start1'
 	],
-	#category : #Borg
+	#category : #'Borg-App'
 }
 
 { #category : #'as yet unclassified' }

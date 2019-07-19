@@ -4,7 +4,7 @@ Class {
 	#classVars : [
 		'lib'
 	],
-	#category : #Borg
+	#category : #'Borg-Motors'
 }
 
 { #category : #initialization }

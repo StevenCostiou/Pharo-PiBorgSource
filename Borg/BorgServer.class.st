@@ -7,7 +7,7 @@ Class {
 		'peerConnection',
 		'connectedToPeer'
 	],
-	#category : #Borg
+	#category : #'Borg-App'
 }
 
 { #category : #initialization }

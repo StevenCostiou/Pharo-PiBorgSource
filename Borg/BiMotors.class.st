@@ -9,7 +9,7 @@ Class {
 		'currentCommand',
 		'direction'
 	],
-	#category : #Borg
+	#category : #'Borg-Motors'
 }
 
 { #category : #initialization }

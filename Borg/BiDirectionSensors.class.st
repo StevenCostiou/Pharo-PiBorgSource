@@ -5,7 +5,7 @@ Class {
 		'frontSensor',
 		'backSensor'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #initialization }

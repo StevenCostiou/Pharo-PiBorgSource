@@ -5,7 +5,7 @@ Class {
 		'pin',
 		'isOff'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #initialization }

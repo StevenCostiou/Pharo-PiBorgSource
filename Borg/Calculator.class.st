@@ -1,7 +1,7 @@
 Class {
 	#name : #Calculator,
 	#superclass : #Object,
-	#category : #Borg
+	#category : #'Borg-Model'
 }
 
 { #category : #'image manipulation' }

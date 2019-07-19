@@ -5,7 +5,7 @@ Class {
 		'trigger',
 		'echo'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #'as yet unclassified' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #DigitalSensor,
 	#superclass : #AbstractSensor,
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #initialization }

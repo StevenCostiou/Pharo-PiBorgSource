@@ -8,7 +8,7 @@ Class {
 		'value',
 		'log'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #initialization }

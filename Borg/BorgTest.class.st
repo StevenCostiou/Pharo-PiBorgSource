@@ -1,7 +1,7 @@
 Class {
 	#name : #BorgTest,
 	#superclass : #Object,
-	#category : #Borg
+	#category : #'Borg-App'
 }
 
 { #category : #motors }

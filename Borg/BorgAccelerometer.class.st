@@ -6,7 +6,7 @@ Class {
 		'addrY',
 		'addrZ'
 	],
-	#category : #Borg
+	#category : #'Borg-Sensors'
 }
 
 { #category : #'as yet unclassified' }
