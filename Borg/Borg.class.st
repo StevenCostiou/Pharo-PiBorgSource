@@ -180,7 +180,7 @@ Borg >> executeMotorCommand: arg1 withArgument: arg2 [
 	^ 'OK'
 ]
 
-{ #category : #API }
+{ #category : #'API - motors' }
 Borg >> fullStop [
 	biMotors fullStop
 ]
@@ -211,6 +211,16 @@ Borg >> motionSensor: arg1 [
 	motionSensor := arg1
 ]
 
+{ #category : #'API - motors' }
+Borg >> moveBackward [
+	biMotors moveBackward
+]
+
+{ #category : #'API - motors' }
+Borg >> moveForward [
+	biMotors moveForward
+]
+
 { #category : #camera }
 Borg >> orienteToBlackRectangle: arg1 [
 	| tmp1 tmp2 |
@@ -227,6 +237,11 @@ Borg >> orienteToBlackRectangle: arg1 [
 			tmp1 > 0
 				ifTrue: [ self biMotors turnLeftAngle: tmp1 withBorgSpeed: arg1 ]
 				ifFalse: [ self biMotors turnRightAngle: tmp1 * -1 withBorgSpeed: arg1 ] ]
+]
+
+{ #category : #'API - motors' }
+Borg >> power: aFloat [
+	biMotors power: aFloat
 ]
 
 { #category : #accessing }
@@ -250,9 +265,24 @@ Borg >> readAllSensors [
 	^ sensorReads
 ]
 
+{ #category : #'API - sensors' }
+Borg >> readSensor: sensorId [
+	self flag: 'TODO'
+]
+
 { #category : #accessing }
 Borg >> size [
 	^ size
+]
+
+{ #category : #'API - motors' }
+Borg >> turnLeft [
+	biMotors turnLeft
+]
+
+{ #category : #'API - motors' }
+Borg >> turnRight [
+	biMotors turnRight
 ]
 
 { #category : #accessing }
