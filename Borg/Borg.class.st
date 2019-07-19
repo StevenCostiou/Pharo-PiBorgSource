@@ -3,16 +3,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'biMotors',
-		'ultrasonicSensor',
-		'motionSensor',
 		'camera',
-		'led',
 		'size',
-		'accelerometer',
-		'proximitySensor',
-		'sensorReads'
+		'sensors'
 	],
-	#category : #Borg
+	#category : #'Borg-Model'
 }
 
 { #category : #'instance creation' }
@@ -44,16 +39,6 @@ Borg class >> ip: arg1 [
 ]
 
 { #category : #accessing }
-Borg >> accelerometer [
-	^ accelerometer
-]
-
-{ #category : #accessing }
-Borg >> accelerometer: arg1 [
-	accelerometer := arg1
-]
-
-{ #category : #accessing }
 Borg >> biMotors [
 	^ biMotors
 ]
@@ -66,6 +51,8 @@ Borg >> biMotors: arg1 [
 { #category : #mode }
 Borg >> bypassObstacle [
 	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 |
+	self flag: 'Broken'.
+	self flag: 'Find original temp var names and refactor'.
 	self biMotors power: 50.
 	tmp1 := 120.
 	tmp2 := 15.
@@ -92,6 +79,8 @@ Borg >> bypassObstacle [
 { #category : #mode }
 Borg >> bypassObstacleWithDistance: arg1 [
 	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 |
+	self flag: 'Broken'.
+	self flag: 'Find original temp var names and refactor'.
 	self biMotors power: 50.
 	tmp1 := 60.
 	tmp2 := OrderedCollection new.
@@ -112,16 +101,6 @@ Borg >> bypassObstacleWithDistance: arg1 [
 		ifTrue: [ self biMotors turnRightStandStillAngle: tmp6 ]
 		ifFalse: [ self biMotors turnLeftStandStillAngle: -1 * tmp6 ].
 	self biMotors moveDistance: self size
-]
-
-{ #category : #accessing }
-Borg >> camera [
-	^ camera
-]
-
-{ #category : #accessing }
-Borg >> camera: arg1 [
-	camera := arg1
 ]
 
 { #category : #'API - commands' }
@@ -186,28 +165,14 @@ Borg >> fullStop [
 
 { #category : #sensors }
 Borg >> getDistance [
-	^ ultrasonicSensor getWallDistance
+	self flag: 'Broken'.
+"	^ ultrasonicSensor getWallDistance"
 ]
 
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
 	size := 20
-]
-
-{ #category : #accessing }
-Borg >> led: arg1 [
-	led := arg1
-]
-
-{ #category : #accessing }
-Borg >> motionSensor [
-	^ motionSensor
-]
-
-{ #category : #accessing }
-Borg >> motionSensor: arg1 [
-	motionSensor := arg1
 ]
 
 { #category : #'API - motors' }
@@ -223,6 +188,8 @@ Borg >> moveForward [
 { #category : #camera }
 Borg >> orienteToBlackRectangle: arg1 [
 	| tmp1 tmp2 |
+	self flag: 'Broken'.
+	self flag: 'Find original temp var names and refactor'.
 	self biMotors power: 80.
 	self camera takeAPicture.
 	tmp2 := Calculator
@@ -243,25 +210,13 @@ Borg >> power: aFloat [
 	biMotors power: aFloat
 ]
 
-{ #category : #accessing }
-Borg >> proximitySensor [
-	^ proximitySensor
-]
-
-{ #category : #accessing }
-Borg >> proximitySensor: arg1 [
-	proximitySensor := arg1
-]
-
 { #category : #sensors }
 Borg >> readAllSensors [
-	sensorReads := Dictionary new.
-	sensorReads
-		at: 'distance' put: self getDistance;
-		at: 'speeds' put: accelerometer read;
-		at: 'motions' put: motionSensor read;
-		at: 'proximity' put: proximitySensor read.
-	^ sensorReads
+	|sensorReadings|
+	sensorReadings := Dictionary new.
+	self sensors
+		keysAndValuesDo: [ :sensorName :sensor | sensorReadings at: sensorName put: sensor read ].
+	^ sensorReadings
 ]
 
 { #category : #'API - sensors' }
@@ -269,8 +224,19 @@ Borg >> readSensor: sensorId [
 	self flag: 'TODO'
 ]
 
+{ #category : #sensors }
+Borg >> registerSensor: aSensor [
+	self sensors at: aSensor name put: aSensor
+]
+
+{ #category : #sensors }
+Borg >> sensors [
+	^ sensors ifNil: [ sensors := Dictionary new ]
+]
+
 { #category : #accessing }
 Borg >> size [
+	self flag: 'size of the robot to avoid obstacles. Ugly...'.
 	^ size
 ]
 
@@ -282,14 +248,4 @@ Borg >> turnLeft [
 { #category : #'API - motors' }
 Borg >> turnRight [
 	biMotors turnRight
-]
-
-{ #category : #accessing }
-Borg >> ultrasonicSensor [
-	^ ultrasonicSensor
-]
-
-{ #category : #accessing }
-Borg >> ultrasonicSensor: arg1 [
-	ultrasonicSensor := arg1
 ]
