@@ -11,7 +11,7 @@ BaselineOfPiBorg >> baseline: spec [
 		for: #common
 		do: [ spec
 				baseline: 'PharoThings'
-					with: [ spec repository: 'github://pharo-iot/PharoThings/src:dev' ];
+					with: [ spec repository: 'github://pharo-iot/PharoThings:dev/src' ];
 				baseline: 'Commander2'
 					with: [ spec repository: 'github://pharo-spec/Commander2/src' ];
 				baseline: 'OSSubprocess'
