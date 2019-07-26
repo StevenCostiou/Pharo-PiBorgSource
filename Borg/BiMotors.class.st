@@ -13,23 +13,28 @@ Class {
 }
 
 { #category : #initialization }
+BiMotors class >> defaultMotors [
+	^ self initializePythonMotors
+]
+
+{ #category : #initialization }
 BiMotors class >> initializePythonMotors [
-	| tmp1 |
-	tmp1 := self basicNew.
-	tmp1
+	| bimotors |
+	bimotors := self basicNew.
+	bimotors
 		motorLeft: BorgPyMotors new;
 		motorRight: BorgPyMotors new.
-	^ tmp1 initialize
+	^ bimotors initialize
 ]
 
 { #category : #initialization }
 BiMotors class >> initializeXPIMotors [
-	| tmp1 |
-	tmp1 := self basicNew.
-	tmp1
+	| bimotors |
+	bimotors := self basicNew.
+	bimotors
 		motorLeft: BorgXPIMotors new;
 		motorRight: BorgXPIMotors new.
-	^ tmp1 initialize
+	^ bimotors initialize
 ]
 
 { #category : #moves }

@@ -43,12 +43,11 @@ BorgApp >> scenario2 [
 
 { #category : #initialization }
 BorgApp >> startBorg [
-	| tmp2 |
-	borg := Borg
-		initializeBorgWithBiMotors: BiMotors initializePythonMotors.
-	tmp2 := BorgServer new.
-	tmp2 model: borg.
-	commandServer := tmp2 startBorg
+	| server |
+	borg := Borg initializeBorgWithBiMotors: BiMotors defaultMotors.
+	server := BorgServer new.
+	server model: borg.
+	commandServer := server startBorg
 ]
 
 { #category : #initialization }
