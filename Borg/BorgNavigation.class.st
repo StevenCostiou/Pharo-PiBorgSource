@@ -1,6 +1,13 @@
 Class {
 	#name : #BorgNavigation,
 	#superclass : #Object,
+	#instVars : [
+		'lastRecordedTime',
+		'turning',
+		'maxTurningAngle',
+		'currentTurningAngle',
+		'direction'
+	],
 	#category : #'Borg-Model'
 }
 
@@ -57,10 +64,57 @@ BorgNavigation class >> getIndexOfMaxValueOfCollection: arg1 [
 	^ tmp2
 ]
 
+{ #category : #'navigation api' }
+BorgNavigation >> computeTurningDirectionFromDistanceArray: distanceArray [
+	| leftFrontDistance rightFrontDistance |
+	leftFrontDistance := distanceArray first.
+	rightFrontDistance := distanceArray last.
+	^ leftFrontDistance > rightFrontDistance
+		ifTrue: [ #left ]
+		ifFalse: [ #right ]
+]
+
 { #category : #yaw }
 BorgNavigation >> computeYawFromAcceleration: accelerationVector [
 	| accX accZ |
 	accX := accelerationVector first.
 	accZ := accelerationVector last.
 	^ 180 * (accZ / (accX squared + accZ squared) sqrt / Float pi) arcTan
+]
+
+{ #category : #'navigation api' }
+BorgNavigation >> controlCourseFor: borg fromSensorReadings: sensorReadings [
+	| distanceArray |
+	distanceArray := sensorReadings at: #distanceArray.
+
+	"If nothing in front go forward"
+	distanceArray second < self maxFrontDistance
+		ifFalse: [ borg execute: #power withArguments: self forwardSpeed.
+			^ borg execute: #fwd withArguments: nil ].
+
+	"Else we turn where there is the larger distance"
+	borg execute: #power withArguments: self turningSpeed.
+	^ borg
+		execute: (self computeTurningDirectionFromDistanceArray: distanceArray)
+		withArguments: nil
+]
+
+{ #category : #'navigation constants' }
+BorgNavigation >> forwardSpeed [
+	^50
+]
+
+{ #category : #initialize }
+BorgNavigation >> initialize [
+	lastRecordedTime := Time now
+]
+
+{ #category : #'navigation constants' }
+BorgNavigation >> maxFrontDistance [
+	^50
+]
+
+{ #category : #'navigation constants' }
+BorgNavigation >> turningSpeed [
+	^30
 ]

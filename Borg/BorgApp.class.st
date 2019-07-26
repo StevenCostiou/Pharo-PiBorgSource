@@ -11,19 +11,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 BorgApp >> scenario1 [
-	| power distance |
-	power := 30.
-	start1 := true.
-	borg
-		execute: #power withArguments: power;
-		executeMotorCommand: #fwd withArgument: 0.
-	[ [ start1 ]
-		whileTrue: [ distance := borg getDistance.
-			distance < power
-				ifTrue: [ borg
-						executeMotorCommand: #stop withArgument: 0;
-						bypassObstacle;
-						executeMotorCommand: #fwd withArgument: 0 ] ] ] fork
+	borg beginAutoNavigation
 ]
 
 { #category : #'as yet unclassified' }

@@ -6,7 +6,9 @@ Class {
 		'camera',
 		'size',
 		'sensors',
-		'navigation'
+		'navigation',
+		'runningAlgorithm',
+		'lastSensorReadings'
 	],
 	#category : #'Borg-Model'
 }
@@ -34,6 +36,17 @@ Borg >> addSensor: aSensor named: aSymbol [
 	self sensors at: aSymbol put: aSensor
 ]
 
+{ #category : #mode }
+Borg >> beginAutoNavigation [
+	self fullStop.
+	runningAlgorithm := true.
+	[ [ runningAlgorithm ]
+		whileTrue: [ navigation
+				controlCourseFor: self
+				fromSensorReadings: self readAllSensors.
+			350 milliSeconds wait ] ] fork
+]
+
 { #category : #accessing }
 Borg >> biMotors [
 	^ biMotors
@@ -42,34 +55,6 @@ Borg >> biMotors [
 { #category : #accessing }
 Borg >> biMotors: arg1 [
 	biMotors := arg1
-]
-
-{ #category : #mode }
-Borg >> bypassObstacle [
-	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 |
-	self flag: 'Broken'.
-	self flag: 'Find original temp var names and refactor'.
-	self biMotors power: 50.
-	tmp1 := 120.
-	tmp2 := 15.
-	tmp3 := OrderedCollection new.
-	self biMotors turnRightStandStillAngle: tmp1 / 2.
-	tmp4 := 1.
-	[ tmp4 < 3 ]
-		whileTrue: [ tmp3 add: self getDistance.
-			tmp4 := tmp4 + 1.
-			self biMotors turnLeftStandStillAngle: tmp1 / 2 ].
-	tmp3 add: self getDistance.
-	tmp5 := (BorgNavigation getIndexOfMaxValueOfCollection: tmp3) - 1.
-	tmp6 := (2 - tmp5) * (tmp1 / 2).
-	tmp6 = 0
-		ifFalse: [ self biMotors turnRightStandStillAngle: tmp6 ].
-	self biMotors moveDistance: 25.
-	tmp7 := tmp1 / 2 - tmp6.
-	tmp7 > 0
-		ifTrue: [ self biMotors turnRightStandStillAngle: tmp7 ]
-		ifFalse: [ self biMotors turnLeftStandStillAngle: -1 * tmp7 ].
-	self biMotors moveDistance: 20
 ]
 
 { #category : #mode }
@@ -156,14 +141,16 @@ Borg >> executeMotorCommand: arg1 withArgument: arg2 [
 
 { #category : #'API - motors' }
 Borg >> fullStop [
-	biMotors fullStop
+	biMotors fullStop.
+	runningAlgorithm := false
 ]
 
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
 	navigation := BorgNavigation new.
-	size := 20
+	size := 20.
+	runningAlgorithm := false
 ]
 
 { #category : #'API - motors' }
@@ -208,11 +195,10 @@ Borg >> readAcceleration [
 
 { #category : #'API - sensors' }
 Borg >> readAllSensors [
-	|sensorReadings|
-	sensorReadings := Dictionary new.
-	sensorReadings at: #distanceArray put: self readDistance.
-	sensorReadings at: #accelerationVector put: self readAcceleration.
-	^ sensorReadings
+	lastSensorReadings := Dictionary new.
+	lastSensorReadings at: #distanceArray put: self readDistance.
+	lastSensorReadings at: #accelerationVector put: self readAcceleration.
+	^ lastSensorReadings
 ]
 
 { #category : #'API - sensors' }
