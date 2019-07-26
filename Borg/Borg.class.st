@@ -11,31 +11,23 @@ Class {
 }
 
 { #category : #'instance creation' }
-Borg class >> initializeBorgWithBiMotors: arg1 [
-	| tmp1 |
-	tmp1 := self new.
-	tmp1
-		biMotors: arg1;
-		ultrasonicSensor:
-			(BorgUltrasonicSensor
-				ultrasonicSensorEcho: #(22 3 #input)
-				trigger: #(17 0 #output));
-		motionSensor: (BorgMotionSensor analogPinLeft: 2 pinRight: 1);
-		accelerometer: (BorgAccelerometer addrX: 7 addrY: 6 addrZ: 5);
-		proximitySensor: (BorgProximitySensor analogPin: 0);
-		camera: BorgCamera new.
-	^ tmp1
+Borg class >> initializeBorgWithBiMotors: motors [
+	| borg |
+	borg := self new.
+	
+	"US Sensors"
+	borg addSensor: (PotHCSR04Device signalPin: 22) named: #leftUSSensor.
+	borg addSensor: (PotHCSR04Device signalPin: 23) named: #frontUSSensor.
+	borg addSensor: (PotHCSR04Device signalPin: 24) named: #rightUSSensor.
+
+	"Motors"
+	borg biMotors: motors.
+	^ borg
 ]
 
-{ #category : #'instance creation' }
-Borg class >> ip: arg1 [
-	| tmp1 |
-	tmp1 := self new.
-	tmp1
-		ip: arg1;
-		motors: (BorgXPIMotors address: tmp1 ip);
-		ultrasonic: (BorgUltrasonicSensor address: tmp1 ip).
-	^ tmp1
+{ #category : #sensors }
+Borg >> addSensor: aSensor named: aSymbol [
+	self sensors at: aSymbol put: aSensor
 ]
 
 { #category : #accessing }
@@ -163,12 +155,6 @@ Borg >> fullStop [
 	biMotors fullStop
 ]
 
-{ #category : #sensors }
-Borg >> getDistance [
-	self flag: 'Broken'.
-"	^ ultrasonicSensor getWallDistance"
-]
-
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
@@ -210,9 +196,10 @@ Borg >> power: aFloat [
 	biMotors power: aFloat
 ]
 
-{ #category : #sensors }
+{ #category : #'API - sensors' }
 Borg >> readAllSensors [
 	|sensorReadings|
+	self flag: 'broken'.
 	sensorReadings := Dictionary new.
 	self sensors
 		keysAndValuesDo: [ :sensorName :sensor | sensorReadings at: sensorName put: sensor read ].
@@ -220,8 +207,14 @@ Borg >> readAllSensors [
 ]
 
 { #category : #'API - sensors' }
-Borg >> readSensor: sensorId [
-	self flag: 'TODO'
+Borg >> readDistance [
+	"Returns an array containing readings from the front left, front and front right sensors.
+	These values are distances in cm"
+
+	^ Array
+		with: (self sensors at: #leftUSSensor) readDistance
+		with: (self sensors at: #frontUSSensor) readDistance
+		with: (self sensors at: #rightUSSensor) readDistance
 ]
 
 { #category : #sensors }
