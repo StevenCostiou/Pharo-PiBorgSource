@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'biMotors',
 		'camera',
-		'size',
 		'sensors',
 		'navigation',
 		'runningAlgorithm',
@@ -57,33 +56,6 @@ Borg >> biMotors: arg1 [
 	biMotors := arg1
 ]
 
-{ #category : #mode }
-Borg >> bypassObstacleWithDistance: arg1 [
-	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 |
-	self flag: 'Broken'.
-	self flag: 'Find original temp var names and refactor'.
-	self biMotors power: 50.
-	tmp1 := 60.
-	tmp2 := OrderedCollection new.
-	self biMotors turnRightStandStillAngle: tmp1 / 2.
-	tmp3 := 1.
-	[ tmp3 < 3 ]
-		whileTrue: [ tmp2 add: self getDistance.
-			tmp3 := tmp3 + 1.
-			self biMotors turnLeftStandStillAngle: tmp1 / 2 ].
-	tmp2 add: self getDistance.
-	tmp4 := (BorgNavigation getIndexOfMaxValueOfCollection: tmp2) - 1.
-	tmp5 := (2 - tmp4) * (tmp1 / 2).
-	tmp5 = 0
-		ifFalse: [ self biMotors turnRightStandStillAngle: tmp5 ].
-	self biMotors moveDistance: arg1.
-	tmp6 := tmp1 / 2 - tmp5.
-	tmp6 > 0
-		ifTrue: [ self biMotors turnRightStandStillAngle: tmp6 ]
-		ifFalse: [ self biMotors turnLeftStandStillAngle: -1 * tmp6 ].
-	self biMotors moveDistance: self size
-]
-
 { #category : #'API - commands' }
 Borg >> execute: commandSymbol withArguments: commandArgument [
 	^ (BorgCommandWithArgument
@@ -101,7 +73,6 @@ Borg >> fullStop [
 Borg >> initialize [
 	super initialize.
 	navigation := BorgNavigation new.
-	size := 20.
 	runningAlgorithm := false
 ]
 
@@ -177,12 +148,6 @@ Borg >> registerSensor: aSensor [
 { #category : #sensors }
 Borg >> sensors [
 	^ sensors ifNil: [ sensors := Dictionary new ]
-]
-
-{ #category : #accessing }
-Borg >> size [
-	self flag: 'size of the robot to avoid obstacles. Ugly...'.
-	^ size
 ]
 
 { #category : #'API - motors' }
