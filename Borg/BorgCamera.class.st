@@ -48,9 +48,9 @@ BorgCamera >> initialize [
 
 { #category : #API }
 BorgCamera >> takeAPicture [
-	| tmp1 tmp3 |
-	tmp1 := OrderedCollection new.
-	tmp1
+	| command process |
+	command := OrderedCollection new.
+	command
 		add: '-o';
 		add: imageName asString;
 		add: '-w';
@@ -62,10 +62,10 @@ BorgCamera >> takeAPicture [
 		add: '250';
 		add: '-t';
 		add: '1'.
-	tmp3 := OSSUnixSubprocess new.
-	tmp3
+	process := OSSUnixSubprocess new.
+	process
 		command: 'raspistill';
-		arguments: tmp1;
+		arguments: command;
 		defaultWriteStreamCreationBlock: [ OSSVMProcess vmProcess systemAccessor makeNonBlockingPipe ];
 		redirectStdout;
 		redirectStderrTo: '/tmp/stderrFile.txt' asFileReference writeStream;

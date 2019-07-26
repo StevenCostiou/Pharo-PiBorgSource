@@ -122,19 +122,6 @@ BorgTest class >> borgUltrasonicTest [
 ]
 
 { #category : #borgApp }
-BorgTest class >> calculatorMaxValue [
-	<script>
-	| tmp1 |
-	tmp1 := OrderedCollection new.
-	tmp1
-		add: 2;
-		add: 1;
-		add: 5;
-		add: 2.
-	(BorgNavigation getIndexOfMaxValueOfCollection: tmp1) asString logCr
-]
-
-{ #category : #borgApp }
 BorgTest class >> findBlackRectangleTest [
 	<script>
 	| tmp1 |
