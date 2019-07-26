@@ -86,7 +86,7 @@ Borg >> moveForward [
 	biMotors moveForward
 ]
 
-{ #category : #camera }
+{ #category : #mode }
 Borg >> orienteToBlackRectangle: arg1 [
 	| tmp1 tmp2 |
 	self flag: 'Broken'.
