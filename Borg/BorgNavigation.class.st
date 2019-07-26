@@ -1,11 +1,11 @@
 Class {
-	#name : #Calculator,
+	#name : #BorgNavigation,
 	#superclass : #Object,
 	#category : #'Borg-Model'
 }
 
 { #category : #'image manipulation' }
-Calculator class >> calculAngleFromPictureSize: arg1 toDestinationPoint: arg2 [
+BorgNavigation class >> calculAngleFromPictureSize: arg1 toDestinationPoint: arg2 [
 	| tmp1 tmp2 tmp3 |
 	tmp1 := arg1 x / 2 - arg2 x.
 	tmp2 := arg1 y - arg2 y.
@@ -14,7 +14,7 @@ Calculator class >> calculAngleFromPictureSize: arg1 toDestinationPoint: arg2 [
 ]
 
 { #category : #'image manipulation' }
-Calculator class >> calculDestinationPointOfWithPython: arg1 [
+BorgNavigation class >> calculDestinationPointOfWithPython: arg1 [
 	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 |
 	tmp1 := PyLibrary uniqueInstance.
 	tmp1
@@ -35,7 +35,7 @@ Calculator class >> calculDestinationPointOfWithPython: arg1 [
 ]
 
 { #category : #'image manipulation' }
-Calculator class >> calculDestinationPointWithColorForm: arg1 [
+BorgNavigation class >> calculDestinationPointWithColorForm: arg1 [
 	| tmp1 tmp2 tmp3 tmp4 tmp5 |
 	tmp1 := ColorForm fromFileNamed: arg1.
 	tmp2 := tmp1 rectangleEnclosingPixelsNotOfColor: Color white.
@@ -46,7 +46,7 @@ Calculator class >> calculDestinationPointWithColorForm: arg1 [
 ]
 
 { #category : #orderedCollection }
-Calculator class >> getIndexOfMaxValueOfCollection: arg1 [
+BorgNavigation class >> getIndexOfMaxValueOfCollection: arg1 [
 	| tmp1 tmp2 |
 	tmp1 := 0.
 	tmp2 := 0.
@@ -55,4 +55,12 @@ Calculator class >> getIndexOfMaxValueOfCollection: arg1 [
 			ifTrue: [ tmp1 := arg1 at: tmp3.
 				tmp2 := tmp3 ] ].
 	^ tmp2
+]
+
+{ #category : #yaw }
+BorgNavigation >> computeYawFromAcceleration: accelerationVector [
+	| accX accZ |
+	accX := accelerationVector first.
+	accZ := accelerationVector last.
+	^ 180 * (accZ / (accX squared + accZ squared) sqrt / Float pi) arcTan
 ]

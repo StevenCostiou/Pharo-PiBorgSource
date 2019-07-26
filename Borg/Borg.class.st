@@ -5,7 +5,8 @@ Class {
 		'biMotors',
 		'camera',
 		'size',
-		'sensors'
+		'sensors',
+		'navigation'
 	],
 	#category : #'Borg-Model'
 }
@@ -19,6 +20,9 @@ Borg class >> initializeBorgWithBiMotors: motors [
 	borg addSensor: (PotHCSR04Device signalPin: 22) named: #leftUSSensor.
 	borg addSensor: (PotHCSR04Device signalPin: 23) named: #frontUSSensor.
 	borg addSensor: (PotHCSR04Device signalPin: 24) named: #rightUSSensor.
+	
+	"Accelerometer"
+	borg addSensor: (PotADXL345Device new) named: #accelerometer.
 
 	"Motors"
 	borg biMotors: motors.
@@ -56,7 +60,7 @@ Borg >> bypassObstacle [
 			tmp4 := tmp4 + 1.
 			self biMotors turnLeftStandStillAngle: tmp1 / 2 ].
 	tmp3 add: self getDistance.
-	tmp5 := (Calculator getIndexOfMaxValueOfCollection: tmp3) - 1.
+	tmp5 := (BorgNavigation getIndexOfMaxValueOfCollection: tmp3) - 1.
 	tmp6 := (2 - tmp5) * (tmp1 / 2).
 	tmp6 = 0
 		ifFalse: [ self biMotors turnRightStandStillAngle: tmp6 ].
@@ -83,7 +87,7 @@ Borg >> bypassObstacleWithDistance: arg1 [
 			tmp3 := tmp3 + 1.
 			self biMotors turnLeftStandStillAngle: tmp1 / 2 ].
 	tmp2 add: self getDistance.
-	tmp4 := (Calculator getIndexOfMaxValueOfCollection: tmp2) - 1.
+	tmp4 := (BorgNavigation getIndexOfMaxValueOfCollection: tmp2) - 1.
 	tmp5 := (2 - tmp4) * (tmp1 / 2).
 	tmp5 = 0
 		ifFalse: [ self biMotors turnRightStandStillAngle: tmp5 ].
@@ -158,6 +162,7 @@ Borg >> fullStop [
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
+	navigation := BorgNavigation new.
 	size := 20
 ]
 
@@ -178,12 +183,12 @@ Borg >> orienteToBlackRectangle: arg1 [
 	self flag: 'Find original temp var names and refactor'.
 	self biMotors power: 80.
 	self camera takeAPicture.
-	tmp2 := Calculator
+	tmp2 := BorgNavigation
 		calculDestinationPointOfWithPython: self camera imagePath , '/' , self camera imageName.
 	tmp2 = (0 @ 0)
 		ifTrue: [ biMotors turnRightStandStillAngle: 30.
 			self orienteToBlackRectangle: arg1 ]
-		ifFalse: [ tmp1 := Calculator
+		ifFalse: [ tmp1 := BorgNavigation
 				calculAngleFromPictureSize: self camera imageSize
 				toDestinationPoint: tmp2.
 			tmp1 > 0
@@ -197,12 +202,16 @@ Borg >> power: aFloat [
 ]
 
 { #category : #'API - sensors' }
+Borg >> readAcceleration [
+	^ (self sensors at: #accelerometer) readCoordinates
+]
+
+{ #category : #'API - sensors' }
 Borg >> readAllSensors [
 	|sensorReadings|
-	self flag: 'broken'.
 	sensorReadings := Dictionary new.
-	self sensors
-		keysAndValuesDo: [ :sensorName :sensor | sensorReadings at: sensorName put: sensor read ].
+	sensorReadings at: #distanceArray put: self readDistance.
+	sensorReadings at: #accelerationVector put: self readAcceleration.
 	^ sensorReadings
 ]
 
@@ -215,6 +224,11 @@ Borg >> readDistance [
 		with: (self sensors at: #leftUSSensor) readDistance
 		with: (self sensors at: #frontUSSensor) readDistance
 		with: (self sensors at: #rightUSSensor) readDistance
+]
+
+{ #category : #'API - sensors' }
+Borg >> readYaw [
+	^ navigation computeYawFromAcceleration: self readAcceleration
 ]
 
 { #category : #sensors }

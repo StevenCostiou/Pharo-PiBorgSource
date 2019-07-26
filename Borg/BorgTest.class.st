@@ -131,7 +131,7 @@ BorgTest class >> calculatorMaxValue [
 		add: 1;
 		add: 5;
 		add: 2.
-	(Calculator getIndexOfMaxValueOfCollection: tmp1) asString logCr
+	(BorgNavigation getIndexOfMaxValueOfCollection: tmp1) asString logCr
 ]
 
 { #category : #borgApp }

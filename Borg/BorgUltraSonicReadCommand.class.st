@@ -1,10 +1,10 @@
 Class {
-	#name : #BorgUltraSonicSensorReadCommand,
+	#name : #BorgUltraSonicReadCommand,
 	#superclass : #BorgSensorCommand,
 	#category : #'Borg-Commands'
 }
 
 { #category : #hooks }
-BorgUltraSonicSensorReadCommand >> execute [
+BorgUltraSonicReadCommand >> execute [
 	^self borg readDistance
 ]
