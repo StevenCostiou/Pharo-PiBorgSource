@@ -91,54 +91,6 @@ Borg >> execute: commandSymbol withArguments: commandArgument [
 		argument: commandArgument) execute
 ]
 
-{ #category : #'API - commands' }
-Borg >> executeMotorCommand: arg1 [
-	self deprecated: 'Behavior replaced by commands'.
-	arg1 = #stop
-		ifTrue: [ biMotors stop ].
-	arg1 = #left
-		ifTrue: [ biMotors turnLeft ].
-	arg1 = #right
-		ifTrue: [ biMotors turnRight ].
-	arg1 = #fwd
-		ifTrue: [ biMotors moveForward ].
-	arg1 = #bwd
-		ifTrue: [ biMotors moveBackward ].
-	arg1 = #standStillTurn
-		ifTrue: [ biMotors standStillTurn ].
-	^ 'OK'
-]
-
-{ #category : #'API - commands' }
-Borg >> executeMotorCommand: arg1 withArgument: arg2 [
-	self deprecated: 'Behavior replaced by commands'.
-	arg1 = #stop
-		ifTrue: [ biMotors stop ].
-	arg1 = #left
-		ifTrue: [ [ arg2 = 0 ]
-				ifTrue: [ biMotors turnLeft ]
-				ifFalse: [ biMotors turnLeftAngle: arg2 ] ].
-	arg1 = #right
-		ifTrue: [ [ arg2 = 0 ]
-				ifTrue: [ biMotors turnRight ]
-				ifFalse: [ biMotors turnRightAngle: arg2 ] ].
-	arg1 = #fwd
-		ifTrue: [ arg2 = 0
-				ifTrue: [ biMotors moveForward ]
-				ifFalse: [ biMotors moveDistance: arg2 ] ].
-	arg1 = #bwd
-		ifTrue: [ biMotors moveBackward ].
-	arg1 = #standStillRight
-		ifTrue: [ arg2 = 0
-				ifTrue: [ biMotors standStillTurn ]
-				ifFalse: [ biMotors turnRightStandStillAngle: arg2 ] ].
-	arg1 = #standStillLeft
-		ifTrue: [ arg2 = 0
-				ifTrue: [ biMotors standStillTurn ]
-				ifFalse: [ biMotors turnLeftStandStillAngle: arg2 ] ].
-	^ 'OK'
-]
-
 { #category : #'API - motors' }
 Borg >> fullStop [
 	biMotors fullStop.
