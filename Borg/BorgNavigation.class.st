@@ -1,12 +1,20 @@
+"
+Dummy navigation for the Borg experiment.
+
+Smarter navigation should be implemented.
+"
 Class {
 	#name : #BorgNavigation,
 	#superclass : #Object,
 	#instVars : [
 		'lastRecordedTime',
 		'turning',
-		'maxTurningAngle',
 		'currentTurningAngle',
-		'direction'
+		'direction',
+		'turningDirection',
+		'forceNextTurningDirection',
+		'totalTurningTime',
+		'turningBackTimer'
 	],
 	#category : #'Borg-Model'
 }
@@ -64,14 +72,9 @@ BorgNavigation class >> getIndexOfMaxValueOfCollection: arg1 [
 	^ tmp2
 ]
 
-{ #category : #'navigation api' }
-BorgNavigation >> computeTurningDirectionFromDistanceArray: distanceArray [
-	| leftFrontDistance rightFrontDistance |
-	leftFrontDistance := distanceArray first.
-	rightFrontDistance := distanceArray last.
-	^ leftFrontDistance > rightFrontDistance
-		ifTrue: [ #left ]
-		ifFalse: [ #right ]
+{ #category : #private }
+BorgNavigation >> beginTurningBackTimer [
+	turningBackTimer ifNil:[turningBackTimer := 0]
 ]
 
 { #category : #yaw }
@@ -88,15 +91,20 @@ BorgNavigation >> controlCourseFor: borg fromSensorReadings: sensorReadings [
 	distanceArray := sensorReadings at: #distanceArray.
 
 	"If nothing in front go forward"
-	distanceArray second < self maxFrontDistance
-		ifFalse: [ borg execute: #power withArguments: self forwardSpeed.
+	(distanceArray anySatisfy: [ :d | d < self maxFrontDistance ])
+		ifFalse: [ turning
+				ifTrue: [ self shouldTurnBack
+						ifTrue: [ borg execute: forceNextTurningDirection withArguments: nil.
+							totalTurningTime wait.
+							self stopTurning ] ].
+			borg execute: #power withArguments: self forwardSpeed.
 			^ borg execute: #fwd withArguments: nil ].
 
 	"Else we turn where there is the larger distance"
 	borg execute: #power withArguments: self turningSpeed.
-	^ borg
-		execute: (self computeTurningDirectionFromDistanceArray: distanceArray)
-		withArguments: nil
+	self setTurningParametersFromDistanceArray: distanceArray.
+	self updateTurningTime.
+	^ borg execute: turningDirection withArguments: nil
 ]
 
 { #category : #'navigation constants' }
@@ -106,7 +114,12 @@ BorgNavigation >> forwardSpeed [
 
 { #category : #initialize }
 BorgNavigation >> initialize [
-	lastRecordedTime := Time now
+	lastRecordedTime := Time now.
+	turning := false.
+	turningDirection := nil.
+	forceNextTurningDirection := nil.
+	totalTurningTime := 0.
+	turningBackTimer := nil
 ]
 
 { #category : #'navigation constants' }
@@ -114,7 +127,53 @@ BorgNavigation >> maxFrontDistance [
 	^50
 ]
 
+{ #category : #private }
+BorgNavigation >> setNextTurningDirection [
+	forceNextTurningDirection := turningDirection = #right
+		ifTrue: [ #left ]
+		ifFalse: [ #right ]
+]
+
+{ #category : #private }
+BorgNavigation >> setTurningParametersFromDistanceArray: distanceArray [
+	| leftFrontDistance rightFrontDistance |
+	turning ifTrue: [ ^ self ].
+	leftFrontDistance := distanceArray first.
+	rightFrontDistance := distanceArray last.
+	turningDirection := leftFrontDistance > rightFrontDistance
+		ifTrue: [ #left ]
+		ifFalse: [ #right ].
+	self setNextTurningDirection.
+	turning := true
+]
+
+{ #category : #private }
+BorgNavigation >> shouldTurnBack [
+	self beginTurningBackTimer.
+	turningBackTimer := turningBackTimer + self updateTimeDuration.
+	^ turningBackTimer >= 2 seconds
+]
+
+{ #category : #private }
+BorgNavigation >> stopTurning [
+	turning := false.
+	turningBackTimer := nil.
+	totalTurningTime := 0.
+	turningDirection := nil.
+	forceNextTurningDirection := nil
+]
+
 { #category : #'navigation constants' }
 BorgNavigation >> turningSpeed [
 	^30
+]
+
+{ #category : #'navigation constants' }
+BorgNavigation >> updateTimeDuration [
+	^ 350 milliSeconds
+]
+
+{ #category : #private }
+BorgNavigation >> updateTurningTime [
+	totalTurningTime := totalTurningTime + self updateTimeDuration
 ]

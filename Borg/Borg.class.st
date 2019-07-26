@@ -43,7 +43,7 @@ Borg >> beginAutoNavigation [
 		whileTrue: [ navigation
 				controlCourseFor: self
 				fromSensorReadings: self readAllSensors.
-			350 milliSeconds wait ] ] fork
+			navigation updateTimeDuration wait ] ] fork
 ]
 
 { #category : #accessing }
@@ -133,11 +133,6 @@ Borg >> readDistance [
 		with: (self sensors at: #leftUSSensor) readDistance
 		with: (self sensors at: #frontUSSensor) readDistance
 		with: (self sensors at: #rightUSSensor) readDistance
-]
-
-{ #category : #'API - sensors' }
-Borg >> readYaw [
-	^ navigation computeYawFromAcceleration: self readAcceleration
 ]
 
 { #category : #sensors }
