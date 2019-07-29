@@ -23,7 +23,7 @@ Borg class >> initializeBorgWithBiMotors: motors [
 	borg addSensor: (PotHCSR04Device signalPin: 24) named: #rightUSSensor.
 	
 	"Accelerometer"
-	borg addSensor: (PotADXL345Device new) named: #accelerometer.
+	borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer.
 
 	"Motors"
 	borg biMotors: motors.

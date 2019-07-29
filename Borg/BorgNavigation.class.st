@@ -59,7 +59,7 @@ BorgNavigation >> computeYawFromAcceleration: accelerationVector [
 	| accX accZ |
 	accX := accelerationVector first.
 	accZ := accelerationVector last.
-	^ 180 * (accZ / (accX squared + accZ squared) sqrt / Float pi) arcTan
+	^ 180 * ((accZ / (accX squared + accZ squared) sqrt) / Float pi) arcTan
 ]
 
 { #category : #'navigation api' }
