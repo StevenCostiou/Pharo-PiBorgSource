@@ -11,9 +11,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-BorgCommandWithArgument class >> command: aCommand argument: anArgument [
+BorgCommandWithArgument class >> command: aCommand argument: anArgument for: aBorg [
 	^ (self commandsAt: aCommand) new
 		arg: anArgument;
+		context: aBorg;
 		yourself
 ]
 

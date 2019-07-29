@@ -60,7 +60,8 @@ Borg >> biMotors: arg1 [
 Borg >> execute: commandSymbol withArguments: commandArgument [
 	^ (BorgCommandWithArgument
 		command: commandSymbol
-		argument: commandArgument) execute
+		argument: commandArgument
+		for: self) execute
 ]
 
 { #category : #'API - motors' }
