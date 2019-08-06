@@ -22,6 +22,6 @@ BaselineOfPiBorg >> baseline: spec [
 				baseline: 'PyLibrary'
 					with: [ spec repository: 'github://StevenCostiou/PyLibrary' ];
 				baseline: 'PicoMotors'
-					with: [ spec repository: 'github://StevenCostiou/PicoBorgReverseMotors' ].
+					with: [ spec repository: 'github://StevenCostiou/PicoBorgReverseMotors:Refactorings' ].
 			spec package: 'Borg' ]
 ]
