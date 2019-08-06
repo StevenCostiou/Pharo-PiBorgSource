@@ -11,7 +11,7 @@ Class {
 
 { #category : #initialization }
 BiMotors class >> defaultMotors [
-	^ self initializePythonMotors
+	^ self initializePicoBorgMotors
 ]
 
 { #category : #initialization }

@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-Borg class >> initializeBorgWithBiMotors: motors [
+Borg class >> newBorgModelA [
 	| borg |
 	borg := self new.
 	
@@ -25,8 +25,6 @@ Borg class >> initializeBorgWithBiMotors: motors [
 	"Accelerometer"
 	borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer.
 
-	"Motors"
-	borg biMotors: motors.
 	^ borg
 ]
 
@@ -74,7 +72,8 @@ Borg >> fullStop [
 Borg >> initialize [
 	super initialize.
 	navigation := BorgNavigation new.
-	runningAlgorithm := false
+	runningAlgorithm := false.
+	biMotors := BiMotors defaultMotors
 ]
 
 { #category : #'API - motors' }
