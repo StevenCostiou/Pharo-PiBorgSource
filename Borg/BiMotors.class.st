@@ -68,14 +68,14 @@ BiMotors >> motorRight: anObject [
 
 { #category : #moves }
 BiMotors >> moveBackward [
-	motorLeft power: -1 * power.
-	motorRight power: -1 * power
+	motorLeft power: power.
+	motorRight power: power
 ]
 
 { #category : #moves }
 BiMotors >> moveForward [
-	motorLeft power: power.
-	motorRight power: power
+	motorLeft power: -1 * power.
+	motorRight power: -1 * power
 ]
 
 { #category : #accessing }
@@ -90,12 +90,12 @@ BiMotors >> power: aFloat [
 
 { #category : #moves }
 BiMotors >> turnLeft [
-	self motorRight power: power.
-	self motorLeft power: -1 * power
+	motorRight power: power.
+	motorLeft power: power
 ]
 
 { #category : #moves }
 BiMotors >> turnRight [
 	self motorRight power: -1 * power.
-	self motorLeft power: power
+	self motorLeft power: -1 * power
 ]
