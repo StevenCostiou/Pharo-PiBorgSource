@@ -38,9 +38,8 @@ Borg >> beginAutoNavigation [
 	self fullStop.
 	runningAlgorithm := true.
 	[ [ runningAlgorithm ]
-		whileTrue: [ navigation
-				controlCourseFor: self
-				fromSensorReadings: self readAllSensors.
+		whileTrue: [ self power: 50.
+			navigation controlCourseFromSensorReadings: self readAllSensors.
 			navigation updateTimeDuration wait ] ] fork
 ]
 
@@ -76,6 +75,11 @@ Borg >> initialize [
 	biMotors := BiMotors defaultMotors
 ]
 
+{ #category : #testing }
+Borg >> isRunningAlgorithm [
+	^runningAlgorithm 
+]
+
 { #category : #'API - motors' }
 Borg >> moveBackward [
 	biMotors moveBackward
@@ -107,6 +111,11 @@ Borg >> orienteToBlackRectangle: arg1 [
 ]
 
 { #category : #'API - motors' }
+Borg >> power [
+	^biMotors power
+]
+
+{ #category : #'API - motors' }
 Borg >> power: aFloat [
 	biMotors power: aFloat
 ]
@@ -122,6 +131,11 @@ Borg >> readAllSensors [
 	lastSensorReadings at: #distanceArray put: self readDistance.
 	lastSensorReadings at: #accelerationVector put: self readAcceleration.
 	^ lastSensorReadings
+]
+
+{ #category : #'API - sensors' }
+Borg >> readAngle [
+	self flag: 'TODO'
 ]
 
 { #category : #'API - sensors' }

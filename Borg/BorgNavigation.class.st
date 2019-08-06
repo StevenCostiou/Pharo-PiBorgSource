@@ -7,6 +7,7 @@ Class {
 	#name : #BorgNavigation,
 	#superclass : #Object,
 	#instVars : [
+		'borg',
 		'lastRecordedTime',
 		'turning',
 		'currentTurningAngle',
@@ -14,14 +15,27 @@ Class {
 		'turningDirection',
 		'forceNextTurningDirection',
 		'totalTurningTime',
-		'turningBackTimer'
+		'turningBackTimer',
+		'turnBackDirection'
 	],
 	#category : #'Borg-Model'
 }
 
+{ #category : #'instance creation' }
+BorgNavigation class >> on: aBorg [
+	^ self new
+		borg: aBorg;
+		yourself
+]
+
 { #category : #private }
 BorgNavigation >> beginTurningBackTimer [
 	turningBackTimer ifNil:[turningBackTimer := 0]
+]
+
+{ #category : #accessing }
+BorgNavigation >> borg: anObject [
+	borg := anObject
 ]
 
 { #category : #'image manipulation' }
@@ -54,34 +68,42 @@ BorgNavigation >> calculDestinationPointOfWithPython: arg1 [
 	^ 0 @ 0
 ]
 
-{ #category : #yaw }
-BorgNavigation >> computeYawFromAcceleration: accelerationVector [
-	| accX accZ |
-	accX := accelerationVector first.
-	accZ := accelerationVector last.
-	^ 180 * ((accZ / (accX squared + accZ squared) sqrt) / Float pi) arcTan
+{ #category : #'navigation algorithms' }
+BorgNavigation >> computeTimeToMakeDistance: distance withBorgSpeed: speed [
+	"Code from Louise. We lost the source."
+	| tmp1 tmp2 tmp3 |
+	tmp2 := 0.065.
+	tmp1 := 0.0001 * (speed raisedTo: 3) - (0.014 * speed squared)
+		+ (1.3324 * speed) - 13.048.
+	tmp3 := 3.6 * Float pi * tmp1 * tmp2 / 60 * 1000 / 3600 * 100.
+	^ distance / tmp3
+]
+
+{ #category : #'navigation algorithms' }
+BorgNavigation >> computeTurningParametersFromDistanceArray: distanceArray [
+	| leftFrontDistance rightFrontDistance |
+	leftFrontDistance := distanceArray first.
+	rightFrontDistance := distanceArray last.
+	turningDirection := leftFrontDistance > rightFrontDistance
+		ifTrue: [ #left ]
+		ifFalse: [ #right ].
+	turnBackDirection := turningDirection = #right
+		ifTrue: [ #left ]
+		ifFalse: [ #right ]
 ]
 
 { #category : #'navigation api' }
-BorgNavigation >> controlCourseFor: borg fromSensorReadings: sensorReadings [
+BorgNavigation >> controlCourseFromSensorReadings: sensorReadings [
 	| distanceArray |
 	distanceArray := sensorReadings at: #distanceArray.
 
 	"If nothing in front go forward"
 	(distanceArray anySatisfy: [ :d | d < self maxFrontDistance ])
-		ifFalse: [ turning
-				ifTrue: [ self shouldTurnBack
-						ifTrue: [ borg execute: forceNextTurningDirection withArguments: nil.
-							totalTurningTime wait.
-							self stopTurning ] ].
-			borg execute: #power withArguments: self forwardSpeed.
-			^ borg execute: #fwd withArguments: nil ].
-
-	"Else we turn where there is the larger distance"
-	borg execute: #power withArguments: self turningSpeed.
-	self setTurningParametersFromDistanceArray: distanceArray.
-	self updateTurningTime.
-	^ borg execute: turningDirection withArguments: nil
+		ifFalse: [ borg moveForward.
+			^ self ].
+		
+	"Else we avoid the obstacle until we are clear or until auto navigation stops"
+	self simpleAvoidObstacleUsing: distanceArray
 ]
 
 { #category : #'navigation constants' }
@@ -131,6 +153,31 @@ BorgNavigation >> shouldTurnBack [
 	^ turningBackTimer >= 2 seconds
 ]
 
+{ #category : #'navigation algorithms' }
+BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
+	| stopAngle timer timeToWait |
+	self computeTurningParametersFromDistanceArray: distanceArray.
+	
+	stopAngle := borg readAngle abs + 90.
+	borg power: 30.
+	
+	self turn: stopAngle direction: turningDirection.
+	
+	borg isRunningAlgorithm
+		ifFalse: [ ^ self ].
+		
+	timeToWait := self computeTimeToMakeDistance: 60 withBorgSpeed: 30.
+	timer := 0.
+	borg moveForward.
+	
+	[ borg isRunningAlgorithm and: [ timeToWait < timer ] ]
+		whileFalse: [ 100 milliSeconds wait.
+			timer := timer + 100 ].
+		
+	stopAngle := borg readAngle abs - 90.
+	self turn: stopAngle direction: turnBackDirection
+]
+
 { #category : #private }
 BorgNavigation >> stopTurning [
 	turning := false.
@@ -138,6 +185,13 @@ BorgNavigation >> stopTurning [
 	totalTurningTime := 0.
 	turningDirection := nil.
 	forceNextTurningDirection := nil
+]
+
+{ #category : #'navigation algorithms' }
+BorgNavigation >> turn: angle direction: dir [
+	[ borg isRunningAlgorithm and: [ borg readAngle abs < angle ] ]
+		whileFalse: [ borg execute: dir withArguments: nil.
+			100 milliSeconds wait ]
 ]
 
 { #category : #'navigation constants' }
