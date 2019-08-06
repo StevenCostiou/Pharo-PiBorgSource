@@ -19,8 +19,8 @@ BiMotors class >> initializePicoBorgMotors [
 	| bimotors |
 	bimotors := self basicNew.
 	bimotors
-		motorLeft: (PotPicoBorgMotors newMotorLeft connect; yourself);
-		motorRight: (PotPicoBorgMotors newMotorRight connect; yourself).
+		motorLeft: (PotPicoBorgMotors newMotorLeft initialize connect; yourself);
+		motorRight: (PotPicoBorgMotors newMotorRight initialize connect; yourself).
 	^ bimotors initialize
 ]
 
