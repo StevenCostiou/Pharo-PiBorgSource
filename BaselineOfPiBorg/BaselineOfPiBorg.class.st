@@ -20,6 +20,8 @@ BaselineOfPiBorg >> baseline: spec [
 				baseline: 'MCP3008'
 					with: [ spec repository: 'github://pharo-iot/Pharo-MCP3008' ];
 				baseline: 'PyLibrary'
-					with: [ spec repository: 'github://StevenCostiou/PyLibrary' ].
+					with: [ spec repository: 'github://StevenCostiou/PyLibrary' ];
+				baseline: 'PicoMotors'
+					with: [ spec repository: 'github://StevenCostiou/PicoBorgReverseMotors' ].
 			spec package: 'Borg' ]
 ]
