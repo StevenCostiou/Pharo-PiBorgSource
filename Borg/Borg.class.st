@@ -18,9 +18,9 @@ Borg class >> newBorgModelA [
 	borg := self new.
 	
 	"US Sensors"
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 26 gpioHeader echoPin: 22 gpioHeader)) initialize connect; yourself) named: #leftUSSensor.
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 19 gpioHeader echoPin: 27 gpioHeader)) initialize connect; yourself) named: #frontUSSensor.
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 13 gpioHeader echoPin: 17 gpioHeader )) initialize connect; yourself) named: #rightUSSensor.
+	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 26 gpio echoPin: 22 gpio)) initialize connect; yourself) named: #leftUSSensor.
+	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 19 gpio echoPin: 27 gpio)) initialize connect; yourself) named: #frontUSSensor.
+	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 13 gpio echoPin: 17 gpio )) initialize connect; yourself) named: #rightUSSensor.
 	
 	"Accelerometer"
 	"borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer."
@@ -129,7 +129,7 @@ Borg >> readAcceleration [
 Borg >> readAllSensors [
 	lastSensorReadings := Dictionary new.
 	lastSensorReadings at: #distanceArray put: self readDistance.
-	lastSensorReadings at: #accelerationVector put: self readAcceleration.
+	"lastSensorReadings at: #accelerationVector put: self readAcceleration."
 	^ lastSensorReadings
 ]
 
