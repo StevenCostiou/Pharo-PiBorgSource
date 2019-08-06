@@ -18,12 +18,12 @@ Borg class >> newBorgModelA [
 	borg := self new.
 	
 	"US Sensors"
-	borg addSensor: (PotHCSR04Device signalPin: 22) named: #leftUSSensor.
-	borg addSensor: (PotHCSR04Device signalPin: 23) named: #frontUSSensor.
-	borg addSensor: (PotHCSR04Device signalPin: 24) named: #rightUSSensor.
+	borg addSensor:  (RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 26 gpioHeader echoPin: 22 gpioHeader)) named: #leftUSSensor.
+	borg addSensor:  (RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 19 gpioHeader echoPin: 27 gpioHeader)) named: #frontUSSensor.
+	borg addSensor:  (RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 13 gpioHeader echoPin: 17 gpioHeader )) named: #rightUSSensor.
 	
 	"Accelerometer"
-	borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer.
+	"borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer."
 
 	^ borg
 ]
