@@ -56,6 +56,16 @@ BiMotors >> initialize [
 	power := 0
 ]
 
+{ #category : #accessing }
+BiMotors >> motorLeft: anObject [
+	motorLeft := anObject
+]
+
+{ #category : #accessing }
+BiMotors >> motorRight: anObject [
+	motorRight := anObject
+]
+
 { #category : #moves }
 BiMotors >> moveBackward [
 	motorLeft power: -1 * power.
