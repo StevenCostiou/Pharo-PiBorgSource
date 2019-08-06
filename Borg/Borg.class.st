@@ -117,7 +117,7 @@ Borg >> power [
 
 { #category : #'API - motors' }
 Borg >> power: aFloat [
-	biMotors power: aFloat
+	biMotors power: (aFloat / 100)
 ]
 
 { #category : #'API - sensors' }

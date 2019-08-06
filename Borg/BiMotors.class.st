@@ -19,8 +19,8 @@ BiMotors class >> initializePicoBorgMotors [
 	| bimotors |
 	bimotors := self basicNew.
 	bimotors
-		motorLeft: PotPicoBorgMotors newMotorLeft;
-		motorRight: PotPicoBorgMotors newMotorRight.
+		motorLeft: (PotPicoBorgMotors newMotorLeft connect; yourself);
+		motorRight: (PotPicoBorgMotors newMotorRight connect; yourself).
 	^ bimotors initialize
 ]
 
@@ -69,13 +69,13 @@ BiMotors >> motorRight: anObject [
 { #category : #moves }
 BiMotors >> moveBackward [
 	motorLeft power: power.
-	motorRight power: power
+	motorRight power:-1* power
 ]
 
 { #category : #moves }
 BiMotors >> moveForward [
 	motorLeft power: -1 * power.
-	motorRight power: -1 * power
+	motorRight power:  power
 ]
 
 { #category : #accessing }
@@ -96,6 +96,6 @@ BiMotors >> turnLeft [
 
 { #category : #moves }
 BiMotors >> turnRight [
-	self motorRight power: -1 * power.
-	self motorLeft power: -1 * power
+	motorRight power: -1 * power.
+	motorLeft power: -1 * power
 ]
