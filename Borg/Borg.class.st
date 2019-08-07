@@ -13,14 +13,24 @@ Class {
 }
 
 { #category : #'instance creation' }
+Borg class >> instantiateSensorDevice: aSensorDevice [
+	|device|
+	device := RpiBoard3B current installDevice: aSensorDevice. 
+	device initialize.
+	device connect.
+	^device
+]
+
+{ #category : #'instance creation' }
 Borg class >> newBorgModelA [
 	| borg |
 	borg := self new.
 	
 	"US Sensors"
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 26 gpio echoPin: 22 gpio)) initialize connect; yourself) named: #leftUSSensor.
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 19 gpio echoPin: 27 gpio)) initialize connect; yourself) named: #frontUSSensor.
-	borg addSensor:  ((RpiBoard3B current installDevice: (PotHCSR04Device triggerPin: 13 gpio echoPin: 17 gpio )) initialize connect; yourself) named: #rightUSSensor.
+	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 26 gpio echoPin: 22 gpio)) named: #leftUSSensor.
+	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 19 gpio echoPin: 27 gpio)) named: #frontUSSensor.
+	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 13 gpio echoPin: 17 gpio)) named: #rightUSSensor.
+	borg addSensor:  (self instantiateSensorDevice: PotMPU6050Device new) named: #gyroSensor.
 	
 	"Accelerometer"
 	"borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer."
@@ -135,7 +145,7 @@ Borg >> readAllSensors [
 
 { #category : #'API - sensors' }
 Borg >> readAngle [
-	self flag: 'TODO'
+	^ (self sensors at: #gyroSensor) readRotationXY
 ]
 
 { #category : #'API - sensors' }
