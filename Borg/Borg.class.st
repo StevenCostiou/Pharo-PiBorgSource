@@ -85,6 +85,25 @@ Borg >> gyro [
 ]
 
 { #category : #initialize }
+Borg >> initAngleZProcess [
+	| yaw |
+	yaw := 0.
+	lastMeasuredTime := Time now asMilliSeconds.
+	[ [ true ]
+		whileTrue: [ | currentTime elapsedTime |
+			currentTime := Time now asMilliSeconds.
+			elapsedTime := currentTime - lastMeasuredTime.
+			lastMeasuredTime := currentTime.
+			elapsedTime crLog.
+			yaw := yaw
+				+
+					((elapsedTime / 1000) asFloat
+						* (self sensors at: #gyroSensor) readGyroscopeSkaliert last).
+			yaw crLog.
+			0.5 seconds wait ] ] fork
+]
+
+{ #category : #initialize }
 Borg >> initialize [
 	super initialize.
 	navigation := BorgNavigation on: self.

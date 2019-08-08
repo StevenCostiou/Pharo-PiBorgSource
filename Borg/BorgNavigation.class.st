@@ -123,7 +123,7 @@ BorgNavigation >> initialize [
 
 { #category : #'navigation constants' }
 BorgNavigation >> maxFrontDistance [
-	^50
+	^20
 ]
 
 { #category : #private }
@@ -158,8 +158,8 @@ BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
 	| stopAngle timer timeToWait |
 	self computeTurningParametersFromDistanceArray: distanceArray.
 	
-	stopAngle := borg readAngle abs + 90.
-	borg power: 30.
+	stopAngle := "borg readAngle abs + "90.
+	borg power: 40.
 	
 	self turn: stopAngle direction: turningDirection.
 	
@@ -174,7 +174,7 @@ BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
 		whileFalse: [ 100 milliSeconds wait.
 			timer := timer + 100 ].
 		
-	stopAngle := borg readAngle abs - 90.
+	stopAngle := "borg readAngle abs -" 90.
 	self turn: stopAngle direction: turnBackDirection
 ]
 
@@ -194,7 +194,7 @@ BorgNavigation >> turn: angle direction: dir [
 	currentTime := Time now asMilliSeconds.
 	
 	borg execute: dir withArguments: nil.
-	[ borg isRunningAlgorithm and: [ timer < 5000 ] ]
+	[ borg isRunningAlgorithm and: [ timer < 2500 ] ]
 		whileTrue: [ 
 			|newTime|
 			newTime := Time now asMilliSeconds.
