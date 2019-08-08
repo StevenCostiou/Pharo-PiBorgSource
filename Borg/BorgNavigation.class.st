@@ -189,8 +189,15 @@ BorgNavigation >> stopTurning [
 
 { #category : #'navigation algorithms' }
 BorgNavigation >> turn: angle direction: dir [
-	[ borg isRunningAlgorithm and: [ borg readAngle abs < angle ] ]
+	| gyro currentAngle targetAngle |
+	gyro := borg gyro.
+	gyro wakeUpSensor.
+	gyro monitorRollPitchYaw.
+	currentAngle := gyro yaw abs.
+	targetAngle := currentAngle + angle.
+	[ borg isRunningAlgorithm and: [ targetAngle < currentAngle ] ]
 		whileFalse: [ borg execute: dir withArguments: nil.
+			currentAngle := gyro yaw abs.
 			100 milliSeconds wait ]
 ]
 

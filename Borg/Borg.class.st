@@ -79,6 +79,11 @@ Borg >> fullStop [
 	runningAlgorithm := false
 ]
 
+{ #category : #sensors }
+Borg >> gyro [
+	^ self sensors at: #gyroSensor
+]
+
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
