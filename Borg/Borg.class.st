@@ -7,7 +7,8 @@ Class {
 		'sensors',
 		'navigation',
 		'runningAlgorithm',
-		'lastSensorReadings'
+		'lastSensorReadings',
+		'lastMeasuredTime'
 	],
 	#category : #'Borg-Model'
 }
@@ -25,6 +26,7 @@ Borg class >> instantiateSensorDevice: aSensorDevice [
 Borg class >> newBorgModelA [
 	| borg |
 	borg := self new.
+	borg initializeMotors.
 	
 	"US Sensors"
 	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 26 gpio echoPin: 22 gpio)) named: #leftUSSensor.
@@ -81,7 +83,11 @@ Borg >> fullStop [
 Borg >> initialize [
 	super initialize.
 	navigation := BorgNavigation new.
-	runningAlgorithm := false.
+	runningAlgorithm := false
+]
+
+{ #category : #initialize }
+Borg >> initializeMotors [
 	biMotors := BiMotors defaultMotors
 ]
 
