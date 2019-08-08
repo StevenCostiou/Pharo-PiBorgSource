@@ -32,7 +32,7 @@ Borg class >> newBorgModelA [
 	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 26 gpio echoPin: 22 gpio)) named: #leftUSSensor.
 	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 19 gpio echoPin: 27 gpio)) named: #frontUSSensor.
 	borg addSensor:  (self instantiateSensorDevice: (PotHCSR04Device triggerPin: 13 gpio echoPin: 17 gpio)) named: #rightUSSensor.
-	borg addSensor:  (self instantiateSensorDevice: PotMPU6050Device new) named: #gyroSensor.
+	"borg addSensor:  (self instantiateSensorDevice: PotMPU6050Device new) named: #gyroSensor."
 	
 	"Accelerometer"
 	"borg addSensor: (RpiBoard3B current installDevice: PotADXL345Device new connect) named: #accelerometer."
@@ -87,7 +87,7 @@ Borg >> gyro [
 { #category : #initialize }
 Borg >> initialize [
 	super initialize.
-	navigation := BorgNavigation new.
+	navigation := BorgNavigation on: self.
 	runningAlgorithm := false
 ]
 
