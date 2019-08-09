@@ -158,7 +158,7 @@ BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
 	| stopAngle timer timeToWait |
 	self computeTurningParametersFromDistanceArray: distanceArray.
 	
-	stopAngle := "borg readAngle abs + "90.
+	stopAngle := borg readAngle abs + 90.
 	borg power: 40.
 	
 	self turn: stopAngle direction: turningDirection.
@@ -166,7 +166,7 @@ BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
 	borg isRunningAlgorithm
 		ifFalse: [ ^ self ].
 		
-	timeToWait := self computeTimeToMakeDistance: 60 withBorgSpeed: 30.
+	timeToWait := "self computeTimeToMakeDistance: 60 withBorgSpeed: 30"2500.
 	timer := 0.
 	borg moveForward.
 	
@@ -174,7 +174,7 @@ BorgNavigation >> simpleAvoidObstacleUsing: distanceArray [
 		whileFalse: [ 100 milliSeconds wait.
 			timer := timer + 100 ].
 		
-	stopAngle := "borg readAngle abs -" 90.
+	stopAngle := borg readAngle abs - 90.
 	self turn: stopAngle direction: turnBackDirection
 ]
 
@@ -189,7 +189,7 @@ BorgNavigation >> stopTurning [
 
 { #category : #'navigation algorithms' }
 BorgNavigation >> turn: angle direction: dir [
-	| timer currentTime |
+	"| timer currentTime |
 	timer := 0.
 	currentTime := Time now asMilliSeconds.
 	
@@ -200,9 +200,9 @@ BorgNavigation >> turn: angle direction: dir [
 			newTime := Time now asMilliSeconds.
 			timer := timer + (newTime  - currentTime).
 			currentTime := newTime.
-			100 milliSeconds wait ].
-		
-	 "| gyro currentAngle targetAngle |
+			100 milliSeconds wait ]."
+
+	| gyro currentAngle targetAngle |
 	gyro := borg gyro.
 	gyro wakeUpSensor.
 	gyro monitorRollPitchYaw.
@@ -211,7 +211,8 @@ BorgNavigation >> turn: angle direction: dir [
 	[ borg isRunningAlgorithm and: [ targetAngle < currentAngle ] ]
 		whileTrue: [ borg execute: dir withArguments: nil.
 			currentAngle := gyro yaw abs.
-			100 milliSeconds wait ]."
+			100 milliSeconds wait ].
+	gyro finishRollPitchYaw
 ]
 
 { #category : #'navigation constants' }
